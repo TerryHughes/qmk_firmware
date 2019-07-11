@@ -10,6 +10,7 @@ extern keymap_config_t keymap_config;
 #define _COLEMAK  1
 #define _DVORAK   2
 #define _WORKMAN  3
+#define _VIM     15
 #define _NUMBER  16
 #define _SYMBOL  17
 #define _MOUSE   18
@@ -109,14 +110,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
  * | Shift |   Z   |   X   |   M   |   C   |   V   |       |   K   |   L   |   ,   |   .   |   /   | Enter |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
- * |Adjust | Ctrl  |  Alt  |  GUI  |Number | Space |       | Space |Symbol | Mouse | Menu  |Nav&Med|  Del  |
+ * |Adjust | Ctrl  |  Alt  |  GUI  |Number | Space |       | Space |Symbol | Mouse |  VIM  |Nav&Med|  Del  |
  * `-----------------------------------------------'       `-----------------------------------------------'
  */
 [_WORKMAN] = LAYOUT_ortho_4x12( \
     KC_TAB ,KC_Q   ,KC_D   ,KC_R   ,KC_W   ,KC_B   ,        KC_J   ,KC_F   ,KC_U   ,KC_P   ,KC_SCLN,KC_BSPC, \
     KC_ESC ,KC_A   ,KC_S   ,KC_H   ,KC_T   ,KC_G   ,        KC_Y   ,KC_N   ,KC_E   ,KC_O   ,KC_I   ,KC_QUOT, \
     KC_LSFT,KC_Z   ,KC_X   ,KC_M   ,KC_C   ,KC_V   ,        KC_K   ,KC_L   ,KC_COMM,KC_DOT ,KC_SLSH,KC_ENT , \
-    ADJUST ,KC_LCTL,KC_LALT,KC_LGUI,NUMBER ,KC_SPC ,        KC_SPC ,SYMBOL ,TG(_MOUSE),KC_APP ,NAV_MED,KC_DEL   \
+    ADJUST ,KC_LCTL,KC_LALT,KC_LGUI,NUMBER ,KC_SPC ,        KC_SPC ,SYMBOL ,TG(_MOUSE),TG(_VIM),NAV_MED,KC_DEL   \
+),
+
+/* VIM
+ * ,-----------------------------------------------.       ,-----------------------------------------------.
+ * |       |   G   |   U   |   I   |   D   |   T   |       |   F   |   Y   |   A   |   R   |   O   |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |   0   |   ^   |   B   |   W   |   E   |       |   H   |   J   |   K   |   L   |   $   |   X   |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |   Z   |   C   |   V   |   P   |   ,   |       |   ;   |   N   |   .   |   S   |   /   |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |       |       |       |       |       |       |       |       |       |       |       |       |
+ * `-----------------------------------------------'       `-----------------------------------------------'
+ */
+[_VIM] =  LAYOUT_ortho_4x12( \
+    _______,KC_G   ,KC_U   ,KC_I   ,KC_D   ,KC_T   ,        KC_F   ,KC_Y   ,KC_A   ,KC_R   ,KC_O   ,_______, \
+    _______,KC_0   ,KC_CIRC,KC_B   ,KC_W   ,KC_E   ,        KC_H   ,KC_J   ,KC_K   ,KC_L   ,KC_DLR ,KC_X   , \
+    _______,KC_Z   ,KC_C   ,KC_V   ,KC_P   ,KC_COMM,        KC_SCLN,KC_N   ,KC_DOT ,KC_S   ,KC_SLSH,_______, \
+    _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______  \
 ),
 
 /* Number
@@ -175,19 +194,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 
 /* Navigate and Media
  * ,-----------------------------------------------.       ,-----------------------------------------------.
- * |       | DRS1  |       |       |       |       |       | Prev  | Play  |       | Next  | DMP1  |       |
+ * |       | DRS1  |       |       |   M   |   Q   |       | Prev  | Play  |       | Next  | DMP1  |       |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
  * |       | DRS2  | Home  | PgUp  | PgDn  |  End  |       | Left  | Down  |  Up   | Right | DMP2  |       |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
- * |       | DRSt  |       |       |       |       |       | Mute  | Vol-  | Vol+  |       |       |       |
+ * |       | DRSt  |       |       |   '   |       |       | Mute  | Vol-  | Vol+  |       | Menu  |       |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
  * |       |       |       |       |       |       |       |       |       |       |       |       |       |
  * `-----------------------------------------------'       `-----------------------------------------------'
  */
 [_NAV_MED] =  LAYOUT_ortho_4x12( \
-    _______,DYN_RS1,_______,_______,_______,_______,        KC_MPRV,KC_MPLY,_______,KC_MNXT,DYN_MP1,_______, \
+    _______,DYN_RS1,_______,_______,KC_M   ,KC_Q   ,        KC_MPRV,KC_MPLY,_______,KC_MNXT,DYN_MP1,_______, \
     _______,DYN_RS2,KC_HOME,KC_PGUP,KC_PGDN,KC_END ,        KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,DYN_MP2,_______, \
-    _______,DYN_RS ,_______,_______,_______,_______,        KC_MUTE,KC_VOLD,KC_VOLU,_______,_______,_______, \
+    _______,DYN_RS ,_______,_______,KC_QUOT,_______,        KC_MUTE,KC_VOLD,KC_VOLU,_______,KC_APP ,_______, \
     _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______  \
 ),
 

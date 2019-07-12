@@ -18,6 +18,8 @@ extern keymap_config_t keymap_config;
 #define _LOWER   29
 #define _RAISE   30
 #define _ADJUST  31
+// NOTE(TerryH): up to 32 layers (0-31) can be defined
+//               only the first 16 (0-15) can be used as default layers
 
 enum custom_keycodes
 {
@@ -45,8 +47,12 @@ enum custom_keycodes
 #define _______ KC_TRNS
 #define XXXXXXX KC_NO
 
+// TODO(TerryH): review https://noahfrederick.com/log/the-planck-keyboard for ideas on tap actions when ready for that
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 {
+
+// TODO(TerryH): maybe define 0th layer to be just border keys or maybe just leave it as qwerty but remove border keys from other layers?
 
 /* Qwerty
  * ,-----------------------------------------------.       ,-----------------------------------------------.
@@ -103,6 +109,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 ),
 
 /* Workman [https://github.com/ojbucao/Workman/]
+   NOTE(TerryH): swapping Adjust and Ctrl causes issues when switching base layers because adjust is never released, you have to press and release adjust on the new base layer
+   NOTE(TerryH): Shift+F10 opens the context menu as well (KC_APP)
+   TODO(TerryH): do i really want space on both sides? override space on number to be backspace and delete on code? (mnemonic remove character left/right of insertion point)
  * ,-----------------------------------------------.       ,-----------------------------------------------.
  * |  Tab  |   Q   |   D   |   R   |   W   |   B   |       |   J   |   F   |   U   |   P   |   ;   | Bksp  |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
@@ -138,6 +147,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
     _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______  \
 ),
 
+/* Blank
+ * ,-----------------------------------------------.       ,-----------------------------------------------.
+ * |       |       |       |       |       |       |       |       |       |       |       |       |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |       |       |       |       |       |       |       |       |       |       |       |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |       |       |       |       |       |       |       |       |       |       |       |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |       |       |       |       |       |       |       |       |       |       |       |       |
+ * `-----------------------------------------------'       `-----------------------------------------------'
+[] =  LAYOUT_ortho_4x12( \
+    _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______, \
+    _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______, \
+    _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______, \
+    _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______  \
+),
+ */
+
 /* Number
  * ,-----------------------------------------------.       ,-----------------------------------------------.
  * |       |  F1   |  F2   |  F3   |  F4   |   A   |       |   B   |   7   |   8   |   9   |   *   |       |
@@ -156,6 +183,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
     _______,_______,_______,_______,_______,_______,        _______,KC_P0  ,KC_PSLS,KC_PDOT,KC_PENT,_______  \
 ),
 
+// NOTE(TerryH): bracket mirroring taken from Crackle layout, see:
+//               "Crackle — keyboard layout for programmers - Jack Couch - Medium"
+//               https://medium.com/@jack_21924/crackle-keyboard-layout-for-special-characters-e4dd04838231
 /* Symbol
  * ,-----------------------------------------------.       ,-----------------------------------------------.
  * |       |       |   _   |   ^   |   %   |       |       |       |   `   |   $   |   @   |       |       |
@@ -247,6 +277,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 ),
 
 /* Adjust (Lower + Raise)
+   TODO(TerryH): DEBUG to the right of RESET?
  * ,-----------------------------------------------.       ,-----------------------------------------------.
  * |       | Reset |       |       |       |       |       |       |       |       |       |       |  Del  |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
@@ -296,6 +327,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         case DVORAK:  { if (record->event.pressed) { PlaySong(tone_dvorak ); persistent_default_layer_set(1UL << _DVORAK ); } return false; } break;
         case WORKMAN: { if (record->event.pressed) { PlaySong(tone_workman); persistent_default_layer_set(1UL << _WORKMAN); } return false; } break;
 
+        // TODO(TerryH): maybe tri-layer NUMBER and SYMBOL to NAV_MED?
         case NUMBER: { if (record->event.pressed) { layer_on (_NUMBER); }
                        else                       { layer_off(_NUMBER); }                                                     return false; } break;
         case SYMBOL: { if (record->event.pressed) { layer_on (_SYMBOL); }

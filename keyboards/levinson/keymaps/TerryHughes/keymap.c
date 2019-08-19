@@ -13,6 +13,7 @@ extern keymap_config_t keymap_config;
 #define _NUMBER  16
 #define _SYMBOL  17
 #define _MOUSE   18
+#define _NAV_MED 19
 #define _LOWER   29
 #define _RAISE   30
 #define _ADJUST  31
@@ -25,6 +26,7 @@ enum custom_keycodes
     WORKMAN,
     NUMBER,
     SYMBOL,
+    NAV_MED,
     LOWER,
     RAISE,
     ADJUST,
@@ -99,14 +101,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
  * | Shift |   Z   |   X   |   M   |   C   |   V   |       |   K   |   L   |   ,   |   .   |   /   | Enter |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
- * |Adjust | Ctrl  |  Alt  |  GUI  |Number | Space |       | Space |Symbol | Mouse | Menu  |       |  Del  |
+ * |Adjust | Ctrl  |  Alt  |  GUI  |Number | Space |       | Space |Symbol | Mouse | Menu  |Nav&Med|  Del  |
  * `-----------------------------------------------'       `-----------------------------------------------'
  */
 [_WORKMAN] = LAYOUT_ortho_4x12( \
     KC_TAB ,KC_Q   ,KC_D   ,KC_R   ,KC_W   ,KC_B   ,        KC_J   ,KC_F   ,KC_U   ,KC_P   ,KC_SCLN,KC_BSPC, \
     KC_ESC ,KC_A   ,KC_S   ,KC_H   ,KC_T   ,KC_G   ,        KC_Y   ,KC_N   ,KC_E   ,KC_O   ,KC_I   ,KC_QUOT, \
     KC_LSFT,KC_Z   ,KC_X   ,KC_M   ,KC_C   ,KC_V   ,        KC_K   ,KC_L   ,KC_COMM,KC_DOT ,KC_SLSH,KC_ENT , \
-    ADJUST ,KC_LCTL,KC_LALT,KC_LGUI,NUMBER ,KC_SPC ,        KC_SPC ,SYMBOL ,TG(_MOUSE),KC_APP ,_______,KC_DEL   \
+    ADJUST ,KC_LCTL,KC_LALT,KC_LGUI,NUMBER ,KC_SPC ,        KC_SPC ,SYMBOL ,TG(_MOUSE),KC_APP ,NAV_MED,KC_DEL   \
 ),
 
 /* Number
@@ -160,6 +162,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
     _______,_______,_______,KC_MS_U,_______,_______,        _______,KC_BTN4,_______,KC_BTN5,KC_ACL0,_______, \
     _______,_______,KC_MS_L,KC_MS_D,KC_MS_R,_______,        _______,KC_BTN1,KC_BTN2,KC_BTN3,KC_ACL1,_______, \
     _______,_______,_______,_______,_______,_______,        KC_WH_L,KC_WH_D,KC_WH_U,KC_WH_R,KC_ACL2,_______, \
+    _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______  \
+),
+
+/* Navigate and Media
+ * ,-----------------------------------------------.       ,-----------------------------------------------.
+ * |       |       |       |       |       |       |       | Prev  | Play  |       | Next  |       |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |       | Home  | PgUp  | PgDn  |  End  |       | Left  | Down  |  Up   | Right |       |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |       |       |       |       |       |       | Mute  | Vol-  | Vol+  |       |       |       |
+ * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
+ * |       |       |       |       |       |       |       |       |       |       |       |       |       |
+ * `-----------------------------------------------'       `-----------------------------------------------'
+ */
+[_NAV_MED] =  LAYOUT_ortho_4x12( \
+    _______,_______,_______,_______,_______,_______,        KC_MPRV,KC_MPLY,_______,KC_MNXT,_______,_______, \
+    _______,_______,KC_HOME,KC_PGUP,KC_PGDN,KC_END ,        KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_______,_______, \
+    _______,_______,_______,_______,_______,_______,        KC_MUTE,KC_VOLD,KC_VOLU,_______,_______,_______, \
     _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______  \
 ),
 
@@ -249,6 +269,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
                        else                       { layer_off(_NUMBER); }                                                     return false; } break;
         case SYMBOL: { if (record->event.pressed) { layer_on (_SYMBOL); }
                        else                       { layer_off(_SYMBOL); }                                                     return false; } break;
+
+        case NAV_MED: { if (record->event.pressed) { layer_on (_NAV_MED); }
+                        else                       { layer_off(_NAV_MED); }                                                   return false; } break;
 
         case LOWER: { if (record->event.pressed) { layer_on (_LOWER); update_tri_layer(_LOWER, _RAISE, _ADJUST); }
                       else                       { layer_off(_LOWER); update_tri_layer(_LOWER, _RAISE, _ADJUST); }            return false; } break;

@@ -30,7 +30,15 @@ enum custom_keycodes
     LOWER,
     RAISE,
     ADJUST,
+    DYNAMIC_MACRO_RANGE,
 };
+
+#include "dynamic_macro.h"
+#define DYN_RS1 DYN_REC_START1
+#define DYN_RS2 DYN_REC_START2
+#define DYN_RS  DYN_REC_STOP
+#define DYN_MP1 DYN_MACRO_PLAY1
+#define DYN_MP2 DYN_MACRO_PLAY2
 
 // Fillers to make layering more clear
 #define _______ KC_TRNS
@@ -167,19 +175,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] =
 
 /* Navigate and Media
  * ,-----------------------------------------------.       ,-----------------------------------------------.
- * |       |       |       |       |       |       |       | Prev  | Play  |       | Next  |       |       |
+ * |       | DRS1  |       |       |       |       |       | Prev  | Play  |       | Next  | DMP1  |       |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
- * |       |       | Home  | PgUp  | PgDn  |  End  |       | Left  | Down  |  Up   | Right |       |       |
+ * |       | DRS2  | Home  | PgUp  | PgDn  |  End  |       | Left  | Down  |  Up   | Right | DMP2  |       |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
- * |       |       |       |       |       |       |       | Mute  | Vol-  | Vol+  |       |       |       |
+ * |       | DRSt  |       |       |       |       |       | Mute  | Vol-  | Vol+  |       |       |       |
  * |-------+-------+-------+-------+-------+-------|       |-------+-------+-------+-------+-------+-------|
  * |       |       |       |       |       |       |       |       |       |       |       |       |       |
  * `-----------------------------------------------'       `-----------------------------------------------'
  */
 [_NAV_MED] =  LAYOUT_ortho_4x12( \
-    _______,_______,_______,_______,_______,_______,        KC_MPRV,KC_MPLY,_______,KC_MNXT,_______,_______, \
-    _______,_______,KC_HOME,KC_PGUP,KC_PGDN,KC_END ,        KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,_______,_______, \
-    _______,_______,_______,_______,_______,_______,        KC_MUTE,KC_VOLD,KC_VOLU,_______,_______,_______, \
+    _______,DYN_RS1,_______,_______,_______,_______,        KC_MPRV,KC_MPLY,_______,KC_MNXT,DYN_MP1,_______, \
+    _______,DYN_RS2,KC_HOME,KC_PGUP,KC_PGDN,KC_END ,        KC_LEFT,KC_DOWN,KC_UP  ,KC_RGHT,DYN_MP2,_______, \
+    _______,DYN_RS ,_______,_______,_______,_______,        KC_MUTE,KC_VOLD,KC_VOLU,_______,_______,_______, \
     _______,_______,_______,_______,_______,_______,        _______,_______,_______,_______,_______,_______  \
 ),
 
@@ -258,6 +266,10 @@ void persistent_default_layer_set(uint16_t default_layer)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record)
 {
+    if (!process_record_dynamic_macro(keycode, record)) {
+        return false;
+    }
+
     switch (keycode)
     {
         case QWERTY:  { if (record->event.pressed) { PlaySong(tone_qwerty ); persistent_default_layer_set(1UL << _QWERTY ); } return false; } break;

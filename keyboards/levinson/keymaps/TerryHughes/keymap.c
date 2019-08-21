@@ -327,11 +327,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record)
         case DVORAK:  { if (record->event.pressed) { PlaySong(tone_dvorak ); persistent_default_layer_set(1UL << _DVORAK ); } return false; } break;
         case WORKMAN: { if (record->event.pressed) { PlaySong(tone_workman); persistent_default_layer_set(1UL << _WORKMAN); } return false; } break;
 
-        // TODO(TerryH): maybe tri-layer NUMBER and SYMBOL to NAV_MED?
-        case NUMBER: { if (record->event.pressed) { layer_on (_NUMBER); }
-                       else                       { layer_off(_NUMBER); }                                                     return false; } break;
-        case SYMBOL: { if (record->event.pressed) { layer_on (_SYMBOL); }
-                       else                       { layer_off(_SYMBOL); }                                                     return false; } break;
+        case NUMBER: { if (record->event.pressed) { layer_on (_NUMBER); update_tri_layer(_NUMBER, _SYMBOL, _NAV_MED); }
+                       else                       { layer_off(_NUMBER); update_tri_layer(_NUMBER, _SYMBOL, _NAV_MED); }       return false; } break;
+        case SYMBOL: { if (record->event.pressed) { layer_on (_SYMBOL); update_tri_layer(_NUMBER, _SYMBOL, _NAV_MED); }
+                       else                       { layer_off(_SYMBOL); update_tri_layer(_NUMBER, _SYMBOL, _NAV_MED); }       return false; } break;
 
         case NAV_MED: { if (record->event.pressed) { layer_on (_NAV_MED); }
                         else                       { layer_off(_NAV_MED); }                                                   return false; } break;
